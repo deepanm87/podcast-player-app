@@ -21,7 +21,7 @@ body {
     display: flex;
     align-items: center;
     position: relative;
-    top: 13px;
+    top: 10px;
 }
 
 .nav-title {
@@ -30,7 +30,6 @@ body {
     margin-left: 25px;
     color: white;
 }
-
 .nav-wrapper i {
     color: #1DB954;
     font-size: 25px;
@@ -38,3 +37,66 @@ body {
     top: -5px;
     left: 10px;
 }
+
+.search-container {
+    position: absolute;
+    top: 60px;
+    left: 20px;
+}
+
+.page-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: calc(100vh - 50px);
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 500px);
+    height: calc(100% - 100px);
+    margin: 0 auto;
+    margin-top: 75px;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #e7e7e7;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px 5px rgba(0, 0, 0, 0.3);
+}
+
+.player-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 450px;
+    margin-top: 75px;
+}
+
+.player {
+    height: 400px;
+    width: 400px;
+    background: #e7e7e7;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px 5px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.queue {
+    background: #e7e7e7;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px 5px rgba(0, 0, 0, 0.3);
+    height: calc(100% - 450px);
+    width: 400px;
+    margin-top: 25px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+
+
+
+
+
+
+

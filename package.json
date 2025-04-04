@@ -20,6 +20,7 @@
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "sass": "^1.86.3"
   }
 }
