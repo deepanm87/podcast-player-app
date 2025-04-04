@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "podcast player to listen to podcasts",
   "main": "script.js",
-  "type": "module",
   "scripts": {
     "start": "node server.js"
   },
