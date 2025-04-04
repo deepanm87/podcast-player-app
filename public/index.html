@@ -85,6 +85,29 @@
 
         <div class="player-container">
             <div class="player">
+                <div class="img-container">
+                    <img id="image" src="./podcast.png" alt="Podcast Image" />
+                </div>
+                <div class="title-container">
+                    <h2 id="title">Podcast Title</h2>
+                    <h3 id="date-published">Date Published</h3>
+                </div>
+                <audio id="player" src=""></audio>
+                <div class="controls-container">
+                    <div class="progress-container" id="progress-container">
+                        <div class="progress" id="progress">
+                            <div class="duration-wrapper">
+                                <span id="current-time">0:00</span>
+                                <span id="duration">0:00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="player-controls">
+                        <i class="fas fa-backward" id="prev" title="-15 Seconds"></i>
+                        <i class="fas fa-play main-button" id="play" title="Play"></i>
+                        <i class="fas fa-forward" id="next" title="+ 15 Seconds"></i>
+                    </div>
+                </div>
             </div>
             <div class="queue">
             </div>

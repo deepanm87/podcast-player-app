@@ -228,6 +228,114 @@ button {
     position: relative;
 }
 
+.img-container {
+    height: 200px;
+    width: 200px;
+    position: relative;
+    margin: 0 auto;
+    top: -50px;
+    right: 0;
+    border-radius: 20px;
+}
+
+.img-container img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    box-shadow: 0 5px 30px 5px rgba(0, 0, 0, 0.5);
+}
+
+.title-container {
+    box-sizing: border-box;
+    padding: 10px;
+    position: relative;
+    top: -20px;
+}
+
+.title-container h2 {
+    font-size: 18px;
+    text-align: center;
+    margin: 0;
+}
+
+.title-container h3 {
+    font-size: 16px;
+    text-align: center;
+    font-weight: 400;
+    margin: 5px 0 0;
+}
+
+.controls-container {
+    position: absolute;
+    width: 100%;
+    bottom: 10px;
+}
+
+.progress-container {
+    background: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 40px 20px;
+    height: 4px;
+    width: 90%;
+}
+
+.progress {
+    background: #242323;
+    border-radius: 5px;
+    height: 100%;
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+.duration-wrapper {
+    position: relative;
+    top: -25px;
+    display: flex;
+    gap: 310px;
+    justify-content: space-between;
+}
+
+.player-controls {
+    position: relative;
+    top: -15px;
+    left: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.player-controls .fas {
+    font-size: 30px;
+    color: rgb(129, 129, 129);
+    margin-right: 30px;
+    cursor: pointer;
+    user-select: none;
+    &:hover {
+        filter: brightness(80%);
+    }
+}
+
+.main-button {
+    position: relative;
+    left: 3px;
+}
+
+@media screen and (max-width: 376px) {
+    .player-container {
+        width: 95vw;
+    }
+    .img-container {
+        left: 29px;
+    }
+    h2 {
+        font-size: 20px;
+    }
+    h3 {
+        font-size: 15px;
+    }
+}
+
 .queue {
     background: #e7e7e7;
     border-radius: 20px;
