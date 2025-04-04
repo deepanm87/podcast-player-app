@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
     <div class="nav-wrapper">
         <nav class="nav">
             <h1 class="nav-title">Podcast Player</h1>
@@ -18,20 +19,27 @@
 
     <div class="page-wrapper">
         <div class="search-container">
+            <div class="custom-select">
+                <select name="search-history" id="search-history" title="Search History">
+                    <option value="">Select a Previous Search</option>
+                </select>
+            </div>
             <input type="text" id="search-input" placeholder="Search by Podcast / Topic">
+            <div class="search-buttons">
+                <button id="search-button" type="button">Search</button>
+                <button id="reset-button" type="button">Clear History</button>
+            </div>
         </div>
         <div class="main-container">
-            
         </div>
 
         <div class="player-container">
             <div class="player">
-
             </div>
             <div class="queue">
-
             </div>
         </div>
+
     </div>
     <script src="script.js"></script>
 </body>
