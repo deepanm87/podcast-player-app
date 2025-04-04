@@ -38,6 +38,10 @@ body {
     left: 10px;
 }
 
+.nav-list {
+    display: none;
+}
+
 .search-container {
     position: absolute;
     top: 60px;
@@ -321,21 +325,6 @@ button {
     left: 3px;
 }
 
-@media screen and (max-width: 376px) {
-    .player-container {
-        width: 95vw;
-    }
-    .img-container {
-        left: 29px;
-    }
-    h2 {
-        font-size: 20px;
-    }
-    h3 {
-        font-size: 15px;
-    }
-}
-
 .queue {
     background: #e7e7e7;
     border-radius: 20px;
@@ -399,7 +388,137 @@ button {
     }
 }
 
+@media (max-width: 1025px) {
 
+    html,body {
+        overflow-x: hidden;
+    }
+
+    .nav-wrapper {
+        position: fixed;
+        z-index: 10;
+    }
+
+    .nav {
+        top: 14px;
+    }
+
+    .nav-title {
+        font-size: 20px;
+    }
+
+    .nav-list {
+        position: relative;
+        display: flex;
+        top: 3px;
+        left: -4px;
+    }
+
+    .nav-list span {
+        font-size: 18px;
+        color: white;
+        position: relative;
+        left: 25px;
+        padding-bottom: 3px;
+        &:first-child {
+            margin-right: 10px;
+        }
+    }
+
+    .nav-list .selected {
+        border-bottom: 2px solid #1DB954;
+    }
+
+    .page-wrapper {
+        flex-direction: column;
+    }
+
+    .search-container {
+        position: relative;
+        flex-direction: column;
+        left: 5px;
+    }
+
+    .custom-select {
+        width: calc(100% - 20px);
+        margin-right: unset;
+        margin-bottom: 10px;
+    }
+
+    input {
+        width: calc(100% - 40px);
+    }
+
+    .search-buttons {
+        width: calc(100% - 10px);
+    }
+
+    button {
+        width: 50%;
+    }
+
+    .main-container {
+        width: calc(100% - 20px);
+        height: calc(100% - 180px);
+        margin-top: 65px;
+        padding: 5px 10px;
+    }
+
+    .cards-container {
+        gap: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .card {
+        width: 100%;
+    }
+
+    .player-container {
+        position: relative;
+        margin-top: unset;
+        width: 100%;
+        height: 100%;
+        display: none;
+        justify-content: center;
+    }
+
+    .player {
+        height: 380px;
+        width: calc(100% - 20px);
+        top: 60px;
+    }
+
+    .title-container {
+        top: -30px;
+    }
+
+    .queue {
+        margin-top: unset;
+        position: relative;
+        top: 80px;
+        width: calc(100% - 20px);
+        height: calc(100% - 480px);
+    }
+}
+
+@media (max-width: 500px) {
+    .card {
+        height: auto;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    .card img {
+        width: 100%;
+    }
+
+    .card-content {
+        width: auto;
+        padding: 10px;
+        font-size: 80%;
+        overflow-y: unset;
+    }
+}
 
 
 
