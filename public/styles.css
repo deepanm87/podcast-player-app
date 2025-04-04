@@ -345,7 +345,60 @@ button {
     margin-top: 25px;
     padding: 10px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
 }
+
+.queue-item {
+    background: white;
+    display: flex;
+    margin-bottom: 10px;
+    border-radius: 12px;
+}
+
+.queue-item img {
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    background: grey;
+}
+
+.queue-content {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.queue-content h3 {
+    font-size: 14px;
+    margin: 0;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.icon-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.icon-container i {
+    font-size: 25px;
+    color: rgb(96, 95, 95);
+    cursor: pointer;
+
+    &:hover {
+        filter: brightness(60%);
+    }
+}
+
 
 
 
