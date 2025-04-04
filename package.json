@@ -1,0 +1,25 @@
+{
+  "name": "podcast-player-app",
+  "version": "1.0.0",
+  "description": "podcast player to listen to podcasts",
+  "main": "script.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepanm87/podcast-player-app.git"
+  },
+  "author": "ai",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/deepanm87/podcast-player-app/issues"
+  },
+  "homepage": "https://github.com/deepanm87/podcast-player-app#readme",
+  "dependencies": {
+    "crypto-js": "^4.2.0",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "node-fetch": "^2.7.0"
+  }
+}
