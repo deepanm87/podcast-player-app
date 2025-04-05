@@ -57,6 +57,35 @@ app.get('/api/search', async (req, res) => {
   }
 })
 
+app.get('/api/episodes', async (req, res) => {
+  const feedId = req.query.feedId
+  const max = req.query.max
+  if(!feedId) {
+    return res.status(400).json({ error: 'Feed ID Parameter is required' })
+  }
+
+  const headers = generateAuthHeaders()
+
+  try {
+    const response = await fetch(`${apiEndpoint}/episodes/byitunesid?id=${encodeURIComponent(feedId)}&max=${max}`, {
+      method: 'GET',
+      headers: headers
+    })
+
+    if (response.ok && response.headers.get('content-type').includes('application/json')) {
+      const data = await response.json()
+      res.json(data)
+    } else {
+      const rawText = await response.text()
+      console.log(`Raw Response: ${rawText}`)
+      res.status(500).json({ error: 'Invalid response from API', rawText })
+    }
+  } catch (error) {
+    console.error(`Error fetching API: ${error.message}`)
+    res.status(500).json({ error: error.message })
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT} pointing to ${apiEndpoint}`)
 })

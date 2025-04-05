@@ -190,6 +190,10 @@ button {
     display: flex;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 .card img {
     width: 250px;
     height: auto;
@@ -222,6 +226,31 @@ button {
     color: #777;
     margin-top: 5px;
 }
+
+.card .pub-date-alt {
+    font-size: 0.8em;
+    color: #777;
+    margin: 8px 0 7px 15px;
+}
+
+.icon-container {
+    display: flex;
+}
+
+.icon-container i {
+    font-size: 30px;
+    color: rgb(96, 95, 95);
+    cursor: pointer;
+
+    &:hover {
+        filter: brightness(60%);
+    }
+}
+
+.mr-10 {
+    margin-right: 10px;
+}
+
 
 .player {
     height: 400px;
@@ -372,20 +401,13 @@ button {
     margin-bottom: 10px;
 }
 
-.icon-container {
-    display: flex;
+.queue-content .icon-container {
     flex-direction: column;
     justify-content: space-around;
 }
 
-.icon-container i {
+.queue-content .icon-container i {
     font-size: 25px;
-    color: rgb(96, 95, 95);
-    cursor: pointer;
-
-    &:hover {
-        filter: brightness(60%);
-    }
 }
 
 @media (max-width: 1025px) {
