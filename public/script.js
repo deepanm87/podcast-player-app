@@ -72,6 +72,67 @@ document.addEventListener('DOMContentLoaded', () => {
     function hideLoader() {
         loader.style.display = 'none'
         responseContainer.style.display = 'flex'
+        responseContainer.scrollTo({
+            top: 0
+        })
+    }
+
+    function handleFallbackImage(img) {
+        const fallbackImage = './default-podcast.png'
+        img.src = fallbackImage
+        return img
+    }
+
+    function handleImages(limit) {
+        const images = responseContainer.getElementsByTagName('img')
+        let imagesToLoad = Math.min(images.length, limit)
+        const fallbackImage = './default-podcast.png'
+        if(imagesToLoad === 0) {
+            hideLoader()
+            return
+        }
+
+        Array.from(images).slice(0, limit).forEach( img => {
+            img.onload = img.onerror = () => {
+                imagesToLoad--
+                if(img.complete && !img.naturalWidth) {
+                    img = handleFallbackImage(img)
+                }
+                if(imagesToLoad === 0) {
+                    hideLoader()
+                    lazyLoadRemainingImages(limit)
+                }
+            }
+        })
+    }
+
+    function lazyLoadRemainingImages(start) {
+        const remainingImages = Array.from(responseContainer.getElementsByTagName('img')).slice(start)
+
+        const lazyLoadObserver = new IntersectionObserver( entries => {
+            entries.forEach( entry => {
+                if(entry.isIntersecting) {
+                    let img = entry.target
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src
+                        img.onload = img.onerror = () => {
+                            if(img.complete && !img.naturalWidth) {
+                                img = handleFallbackImage(img)
+                            }
+                            lazyLoadObserver.unobserve(img)
+                        }
+                    } else {
+                        img = handleFallbackImage(img)
+                        lazyLoadObserver.unobserve(img)
+                    }
+                }
+            })
+        })
+            
+
+            remainingImages.forEach( img => {
+                lazyLoadObserver.observe(img)
+            })
     }
 
     async function searchPodcast() {
@@ -90,10 +151,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`/api/search?q=${encodeURIComponent(searchTerm)}`)
             const data = await response.json()
             responseContainer.textContent = ''
+
+            const titles = new Set()
+
             if(data.feeds && data.feeds.length > 0) {
-                data.feeds.forEach( podcast => {
-                    const card = createCard(podcast)
-                    responseContainer.appendChild(card)
+                data.feeds.forEach( (podcast, index) => {
+                    if(podcast.episodeCount > 0 && !titles.has(podcast.title)) {
+                        titles.add(podcast.title)
+                        const card = createCard(podcast)
+                        responseContainer.appendChild(card)
+
+                        if(index >= 25) {
+                            card.querySelector('img').dataset.src = card.querySelector('img').src
+                            card.querySelector('img').src = ''
+                        }
+                    }
+
+                    handleImageLoad(25)
                 })
             } else {
                 responseContainer.innerText = 'No Results Found'
@@ -101,7 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             responseContainer.innerText = `Error: ${error.message}`
         }
-        hideLoader()
     }
 
     function createCard(podcast) {
@@ -145,17 +218,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json()
             responseContainer.textContent = ''
             if(data.items && data.items.length > 0) {
-                data.items.forEach( episode => {
-                    const card = createEpisodeCard(podcast)
+                data.items.forEach( (episode, index) => {
+                    const card = createEpisodeCard(episode)
                     responseContainer.appendChild(card)
+
+                    if(index >= 25) {
+                        card.querySelector('img').dataset.src = card.querySelector('img').src
+                        card.querySelector('img').src = ''
+                    }
                 })
             } else {
                 responseContainer.innerText = 'No Results Found'
             }
+
+            handleImageLoad(25)
         } catch (error) {
             responseContainer.innerText = `Error: ${error.message}`
         }
-        hideLoader()
     }
 
     function createEpisodeCard(episode) {
