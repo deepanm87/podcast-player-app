@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input')
     const searchButton = document.getElementById('search-button')
     const resetButton = document.getElementById('reset-button')
+    const loader = document.getElementById('loader')
     const responseContainer = document.getElementById('response')
 
     function resetHistory() {
@@ -58,6 +59,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadSearchHistory()
 
+    function formatDate(timestamp) {
+        const date = new Date(timestamp * 1000)
+        return date.toLocaleDateString()
+    }
+
+    function showLoader() {
+        loader.style.display = 'flex'
+        responseContainer.style.display = 'none'
+    }
+
+    function hideLoader() {
+        loader.style.display = 'none'
+        responseContainer.style.display = 'flex'
+    }
+
     async function searchPodcast() {
         const searchTerm = searchInput.value.trim()
         if(searchTerm) {
@@ -65,20 +81,56 @@ document.addEventListener('DOMContentLoaded', () => {
             loadSearchHistory()
         } else {
             responseContainer.innerText = 'Please enter a podcast title.'
+            return
         }
+
+        showLoader()
 
         try {
             const response = await fetch(`/api/search?q=${encodeURIComponent(searchTerm)}`)
             const data = await response.json()
             responseContainer.textContent = ''
             if(data.feeds && data.feeds.length > 0) {
-                console.log(data)
+                data.feeds.forEach( podcast => {
+                    const card = createCard(podcast)
+                    responseContainer.appendChild(card)
+                })
             } else {
                 responseContainer.innerText = 'No Results Found'
             }
         } catch (error) {
             responseContainer.innerText = `Error: ${error.message}`
         }
+        hideLoader()
+    }
+
+    function createCard(podcast) {
+        const card = document.createElement('div')
+        card.className = 'card'
+        const img = document.createElement('img')
+        img.src = podcast.image || './default-podcast.png'
+        img.alt = podcast.title
+        const content = document.createElement('div')
+        content.className = 'card-content'
+        const title = document.createElement('h3')
+        title.innerText = podcast.title
+        const description = document.createElement('p')
+        description.innerText = podcast.description
+        const episodeCount = document.createElement('p')
+        episodeCount.className = 'episode-count'
+        episodeCount.innerText = `Episodes: ${podcast.episodeCount}`
+        const pubDate = document.createElement('date')
+        pubDate.className = 'pub-date'
+        pubDate.innerText = `Newest Episode ${podcast.newestItemPubdate ? formatDate(podcast.newestItemPubdate) : 'Not Available'}`
+
+        content.appendChild(title)
+        content.appendChild(description)
+        content.appendChild(episodeCount)
+        content.appendChild(pubDate)
+        card.appendChild(img)
+        card.appendChild(content)
+
+        return card
     }
 
 
