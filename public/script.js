@@ -1,30 +1,119 @@
-const searchLink = document.getElementById('search-link')
-const listenLink = document.getElementById('listen-link')
-const searchContainer = document.querySelector('.search-container')
-const mainContainer = document.querySelector('.main-container')
-const playerContainer = document.querySelector('.player-container')
-const queueContainer = document.querySelector('.queue')
+document.addEventListener('DOMContentLoaded', () => {
+    const searchHistory = document.getElementById('search-history')
+    const searchInput = document.getElementById('search-input')
+    const searchButton = document.getElementById('search-button')
+    const resetButton = document.getElementById('reset-button')
+    const responseContainer = document.getElementById('response')
 
-searchLink.addEventListener('click', navigateToSearch)
-listenLink.addEventListener('click', navigateToPlayer)
+    function resetHistory() {
+        searchHistory.innerText = ''
+        const option = document.createElement('option')
+        option.value = ''
+        option.textContent = 'Select a Previous Search'
+        searchHistory.appendChild(option)
+    }
 
-function navigateToSearch() {
-    searchContainer.style.display = 'flex'
-    mainContainer.style.display = 'flex'
-    playerContainer.style.display = 'none'
-    queueContainer.style.display = 'none'
-    searchLink.classList.add('selected')
-    listenLink.classList.remove('selected')
-}
+    function loadSearchHistory() {
+        const savedSearches = JSON.parse(localStorage.getItem('searchHistory')) || []
+        resetHistory()
+        savedSearches.forEach( savedSearch => {
+            const option = document.createElement('option')
+            option.value = savedSearch
+            option.textContent = savedSearch
+            searchHistory.append(option)
+        })
+    }
 
-function navigateToPlayer() {
-    searchContainer.style.display = 'none'
-    mainContainer.style.display = 'none'
-    playerContainer.style.display = 'flex'
-    queueContainer.style.display = 'flex'
-    searchLink.classList.remove('selected')
-    listenLink.classList.add('selected')
-}
+    function saveSearchHistory(searchTerm) {
+        let savedSearches = JSON.parse(localStorage.getItem('searchHistory')) || []
+        if(!savedSearches.includes(searchTerm)) {
+            savedSearches.push(searchTerm)
+            localStorage.setItem('searchHistory', JSON.stringify(savedSearches))
+        }
+    }
+
+    searchHistory.addEventListener('change', () => {
+        const selectedSearch = searchHistory.value
+        if(selectedSearch) {
+            searchInput.value = selectedSearch
+            searchPodcast()
+        }
+    })
+
+    searchButton.addEventListener('click', searchPodcast)
+    searchInput.addEventListener('keypress', event => {
+        if(event.key === 'Enter') {
+            searchPodcast()
+        }
+    })
+    searchInput.addEventListener('focus', () => {
+        searchInput.value = ''
+    })
+
+    resetButton.addEventListener('click', () => {
+        localStorage.removeItem('searchHistory')
+        resetHistory()
+        searchInput.value = ''
+    })
+
+    loadSearchHistory()
+
+    async function searchPodcast() {
+        const searchTerm = searchInput.value.trim()
+        if(searchTerm) {
+            saveSearchHistory(searchTerm)
+            loadSearchHistory()
+        } else {
+            responseContainer.innerText = 'Please enter a podcast title.'
+        }
+
+        try {
+            const response = await fetch(`/api/search?q=${encodeURIComponent(searchTerm)}`)
+            const data = await response.json()
+            responseContainer.textContent = ''
+            if(data.feeds && data.feeds.length > 0) {
+                console.log(data)
+            } else {
+                responseContainer.innerText = 'No Results Found'
+            }
+        } catch (error) {
+            responseContainer.innerText = `Error: ${error.message}`
+        }
+    }
+
+
+
+
+    const searchLink = document.getElementById('search-link')
+    const listenLink = document.getElementById('listen-link')
+    const searchContainer = document.querySelector('.search-container')
+    const mainContainer = document.querySelector('.main-container')
+    const playerContainer = document.querySelector('.player-container')
+    const queueContainer = document.querySelector('.queue')
+
+    searchLink.addEventListener('click', navigateToSearch)
+    listenLink.addEventListener('click', navigateToPlayer)
+
+    function navigateToSearch() {
+        searchContainer.style.display = 'flex'
+        mainContainer.style.display = 'flex'
+        playerContainer.style.display = 'none'
+        queueContainer.style.display = 'none'
+        searchLink.classList.add('selected')
+        listenLink.classList.remove('selected')
+    }
+
+    function navigateToPlayer() {
+        searchContainer.style.display = 'none'
+        mainContainer.style.display = 'none'
+        playerContainer.style.display = 'flex'
+        queueContainer.style.display = 'flex'
+        searchLink.classList.remove('selected')
+        listenLink.classList.add('selected')
+    }
+})
+
+
 
 
 
