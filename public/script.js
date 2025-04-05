@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
 
-                    handleImageLoad(25)
+                    handleImages(25)
                 })
             } else {
                 responseContainer.innerText = 'No Results Found'
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 responseContainer.innerText = 'No Results Found'
             }
 
-            handleImageLoad(25)
+            handleImages(25)
         } catch (error) {
             responseContainer.innerText = `Error: ${error.message}`
         }
@@ -255,6 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playBtnIcon.title = 'Play Podcast'
         playBtnIcon.addEventListener('click', () => {
             console.log('Episode played', episode)
+            loadPodcast(episode)
         })
 
         const queueBtnIcon = document.createElement('i')
@@ -286,9 +287,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return card
     }
 
-
-
-
     const searchLink = document.getElementById('search-link')
     const listenLink = document.getElementById('listen-link')
     const searchContainer = document.querySelector('.search-container')
@@ -316,6 +314,137 @@ document.addEventListener('DOMContentLoaded', () => {
         searchLink.classList.remove('selected')
         listenLink.classList.add('selected')
     }
+
+    const image = document.getElementById('img')
+    const title = document.getElementById('title')
+    const datePublished = document.getElementById('date-published')
+    const player = document.getElementById('player')
+    const progressContainer = document.getElementById('progress-container')
+    const progress = document.getElementById('progress')
+    const currentTimeEl = document.getElementById('current-time')
+    const durationEl = document.getElementById('duration')
+    const prevBtn = document.getElementById('prev')
+    const playBtn = document.getElementById('play')
+    const nextBtn = document.getElementById('next')
+
+    let isPlaying = false
+
+    playBtn.addEventListener('click', () => {
+        (isPlaying ? pausePodcast() : playPodcast())
+    })
+    
+    player.addEventListener('timeupdate', updateProgressBar)
+    progressContainer.addEventListener('click', setProgressBar)
+    prevBtn.addEventListener('click', () => skipTime(-15))
+    nextBtn.addEventListener('click', () => skipTime(15))
+
+    function playPodcast() {
+        isPlaying = true
+        playBtn.classList.replace('fa-play', 'fa-pause')
+        playBtn.setAttribute('title', 'Pause')
+        player.play()
+    }
+
+    function pausePodcast() {
+        isPlaying = false
+        playBtn.classList.replace('fa-pause', 'fa-play')
+        playBtn.setAttribute('title', 'Play')
+        player.pause()
+    }
+
+    function loadPodcast(episode) {
+        currentTimeEl.style.display = 'none'
+        durationTimeEl.style.display = 'none'
+        title.textContent = episode.title
+        datePublished.textContent = `${episode.datePublished ? formatDate(episode.datePublished) : 'Not Available'}`
+        player.src = episode.enclosureUrl
+        image.src = episode.image || episode.feedImage || './default-podcast.png'
+
+        player.currentTime = 0
+        progress.classList.add('loading')
+        currentTimeEl.textContent = '0:00'
+
+        player.addEventListener('loadmetadata', () => {
+            const duration = player.duration
+            currentTimeEl.style.display = 'block'
+            durationEl.style.display = 'block'
+            formatTime(duration, durationEl)
+            progress.classList.remove('loading')
+            playPodcast()
+        })
+    }
+
+    function formatTime(time, elName) {
+        const hours = Math.floor(time / 3600)
+        const minutes = Math.floor((time % 3600) / 60)
+        let seconds = Math.floor(time % 60)
+
+        if(seconds < 10) {
+            seconds = `0${seconds}`
+        }
+        const formattedMinutes = hours > 0 && minutes < 10 ? `0:${minutes}` : minutes
+
+        if(time) {
+            elName.textContent = hours > 0 ? `${hours}:${formattedMinutes}:${seconds}` : `${minutes}:${seconds}`
+        }
+    }
+
+    function skipTime(amount) {
+        player.currentTime = Math.max(0, Math.min(player.duration, player.currentTime + amount))
+    }
+
+
+    function updateProgressBar(e) {
+            const {duration, currentTime} = e.srcElement
+            const progressPercent = (currentTime / duration) * 100
+            progress.style.width = `${progressPercent}%`
+            formatTime(duration, durationEl)
+            formatTime(currentTime, currentTimeEl)
+        }
+    
+    function setProgressBar(e) {
+        const width = this.clientWidth
+        const clickX = e.offsetX
+        const { duration } = player
+        player.currentTime = (clickX / width) * duration
+    }
+
+    function isMobileDevice() {
+        return window.innerWidth < 1025
+    }
+
+    setInterval( () => {
+        if(isPlaying) {
+            const playerState = {
+                title: title.textContent,
+                datePublished: datePublished.textContent,
+                currentTime: player.currentTime,
+                duration: player.duration,
+                image: image.src,
+                src: player.src
+            }
+            localStorage.setItem('playerState', JSON.stringify(playerState))
+        }
+    }, 5000)
+
+    function loadPlayerState() {
+        const savedState = JSON.parse(localStorage.getItem('playerState'))
+        if(savedState) {
+            title.textContent = savedState.title
+            datePublished.textContent = savedState.datePublished
+            player.src = savedState.src
+            image.src = savedState.image
+            player.currentTime = savedState.currentTime
+            formatTime(savedState.currentTime, currentTimeEl)
+            player.duration = savedState.duration
+            formatTime(savedState.duration, durationEl)
+            progress.style.width = `${(savedState.currentTime / savedState.duration) * 100}%`
+            if(isMobileDevice()) navigateToPlayer() 
+        }
+    }
+    loadPlayerState()
+
+
 })
 
 
@@ -338,100 +467,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-// import {songs} from "./data.js"
 
-// const image = document.querySelector('img')
-// const title = document.getElementById('title')
-// const artist = document.getElementById('artist')
-// const music = document.querySelector('audio')
-// const progressContainer = document.getElementById('progress-container')
-// const progress = document.getElementById('progress')
-// const currentTimeEl = document.getElementById('current-time')
-// const durationEl = document.getElementById('duration')
-// const prevBtn = document.getElementById('prev')
-// const playBtn = document.getElementById('play')
-// const nextBtn = document.getElementById('next')
 
-// let isPlaying = false
-// let songIndex = 0
-
-// playBtn.addEventListener('click', () => {
-//     (isPlaying ? pauseSong() : playSong())
-// })
-// prevBtn.addEventListener('click', prevSong)
-// nextBtn.addEventListener('click', nextSong)
-// music.addEventListener('ended', nextSong)
-// music.addEventListener('timeupdate', updateProgressBar)
-// progressContainer.addEventListener('click', setProgressBar)
-
-// function playSong() {
-//     isPlaying = true
-//     playBtn.classList.replace('fa-play', 'fa-pause')
-//     playBtn.setAttribute('title', 'Pause')
-//     music.play()
-// }
-
-// function pauseSong() {
-//     isPlaying = false
-//     playBtn.classList.replace('fa-pause', 'fa-play')
-//     playBtn.setAttribute('title', 'Play')
-//     music.pause()
-// }
-
-// function loadSong(song) {
-//     title.textContent = `${song.displayName}`
-//     artist.textContent = song.artist
-//     music.src = `music/${song.name}.mp3`
-//     image.src = `img/${song.album}.jpg`
-//     durationEl.textContent = song.duration
-//     currentTimeEl.textContent = '0:00'
-// }
-
-// function prevSong() {
-//     songIndex--
-//     if(songIndex < 0) {
-//         songIndex = songs.length - 1
-//     }
-//     loadSong(songs[songIndex])
-//     playSong()
-// }
-
-// function nextSong() {
-//     songIndex++
-//     if(songIndex > songs.length - 1) {
-//         songIndex = 0
-//     }
-//     loadSong(songs[songIndex])
-//     playSong()
-// }
-
-// function updateProgressBar(e) {
-//     if(isPlaying) {
-//         const {duration, currentTime} = e.srcElement
-//         const progressPercent = (currentTime / duration) * 100
-//         progress.style.width = `${progressPercent}%`
-//         const durationMinutes = Math.floor(duration / 60)
-//         let durationSeconds = Math.floor(duration % 60)
-//         if(durationSeconds < 10) {
-//             durationSeconds = `0${durationSeconds}`
-//         }
-//         if(durationSeconds) {
-//             durationEl.textContent = `${durationMinutes}:${durationSeconds}`
-//         }
-//         const currentMinutes = Math.floor(currentTime / 60)
-//         let currentSeconds = Math.floor(currentTime % 60)
-//         if(currentSeconds < 10) {
-//             currentSeconds = `0${currentSeconds}`
-//         }
-//         currentTimeEl.textContent = `${currentMinutes}:${currentSeconds}`
-//     }
-// }
-
-// function setProgressBar(e) {
-//     const width = this.clientWidth
-//     const clickX = e.offsetX
-//     const { duration } = music
-//     music.currentTime = (clickX / width) * duration
-// }
-
-// loadSong(songs[songIndex])
