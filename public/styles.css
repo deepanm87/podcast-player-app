@@ -467,12 +467,14 @@ button {
 
     .page-wrapper {
         flex-direction: column;
+        margin-top: 50px;
     }
 
     .search-container {
         position: relative;
         flex-direction: column;
         left: 5px;
+        top: 10px;
     }
 
     .custom-select {
@@ -496,7 +498,7 @@ button {
     .main-container {
         width: calc(100% - 20px);
         height: calc(100% - 180px);
-        margin-top: 65px;
+        margin-top: 15px;
         padding: 5px 10px;
     }
 
@@ -522,7 +524,7 @@ button {
     .player {
         height: 380px;
         width: calc(100% - 20px);
-        top: 60px;
+        top: 10px;
     }
 
     .title-container {
@@ -532,7 +534,7 @@ button {
     .queue {
         margin-top: unset;
         position: relative;
-        top: 80px;
+        top: 30px;
         width: calc(100% - 20px);
         height: calc(100% - 480px);
     }
